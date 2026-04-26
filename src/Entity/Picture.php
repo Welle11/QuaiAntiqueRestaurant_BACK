@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PictureRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
 class Picture
@@ -12,21 +13,27 @@ class Picture
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "IDENTITY")]
     #[ORM\Column(type: "integer")]
+    #[Groups(['picture:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 128)]
+    #[Groups(['picture:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 128)]
+    #[Groups(['picture:read'])]
     private ?string $slug = null;
 
     #[ORM\Column]
+    #[Groups(['picture:read'])]
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['picture:read'])]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'pictures')]
+    // Pas de Groups ici — on exclut le restaurant pour éviter la référence circulaire
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Restaurant $restaurant = null;
 
@@ -43,7 +50,6 @@ class Picture
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -55,7 +61,6 @@ class Picture
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
-
         return $this;
     }
 
@@ -67,7 +72,6 @@ class Picture
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -79,7 +83,6 @@ class Picture
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -91,7 +94,6 @@ class Picture
     public function setRestaurant(?Restaurant $restaurant): static
     {
         $this->restaurant = $restaurant;
-
         return $this;
     }
 }

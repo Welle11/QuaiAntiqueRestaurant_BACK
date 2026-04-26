@@ -24,7 +24,7 @@ class SecurityController extends AbstractController
     ) {
     }
 
-    #[Route('/registration', name: 'registration', methods: 'POST')]
+    #[Route('/registration', name: 'registration', methods: 'POST',)]
     /** @OA\Post(
      *     path="/api/registration",
      *     summary="Inscription d'un nouvel utilisateur",
@@ -61,7 +61,7 @@ class SecurityController extends AbstractController
         $this->manager->flush();
 
         return new JsonResponse(
-            ['user'  => $user->getUserIdentifier(), 'apiToken' => $user->getApiToken(), 'roles' => $user->getRoles()],
+            ['user' => $user->getUserIdentifier(), 'apiToken' => $user->getApiToken(), 'roles' => $user->getRoles()],
             Response::HTTP_CREATED
         );
     }
@@ -98,9 +98,9 @@ class SecurityController extends AbstractController
         }
 
         return new JsonResponse([
-            'user'  => $user->getUserIdentifier(),
+            'user'     => $user->getUserIdentifier(),
             'apiToken' => $user->getApiToken(),
-            'roles' => $user->getRoles(),
+            'roles'    => $user->getRoles(),
         ]);
     }
 
@@ -117,9 +117,8 @@ class SecurityController extends AbstractController
     public function me(): JsonResponse
     {
         $user = $this->getUser();
-
-        $responseData = $this->serializer->serialize($user, 'json');
-
+        // On utilise le groupe user:read pour exclure password, apiToken etc.
+        $responseData = $this->serializer->serialize($user, 'json', ['groups' => 'user:read']);
         return new JsonResponse($responseData, Response::HTTP_OK, [], true);
     }
 

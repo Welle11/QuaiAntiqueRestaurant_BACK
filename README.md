@@ -1,116 +1,102 @@
-# studi-restaurant-symfony-lts-api
 
-**This repository is a simple project use for STUDI courses written with the last version of Symfony.**
+# QuaiAntique Restaurant — Back-end API
 
-```
-/*
+[![Author](https://img.shields.io/badge/author-gaetan.role%40gmail.com-blue.svg)](https://github.com/gaetanrole)
+
+
  * Copyright (C) STUDI, Inc - All Rights Reserved.
  * Unauthorized copying of this repository, via any medium is strictly prohibited.
  * Proprietary and confidential.
  * Written by Gaetan Rolé-Dubruille <gaetan.role@gmail.com>.
- */
-```
 
-[![Author](https://img.shields.io/badge/author-gaetan.role%40gmail.com-blue.svg)](https://github.com/gaetanrole)
 
-## Documentation
+---
 
-Before the development, **be sure to be comfortable with your current work environment**.
-Like to setup your IDE, install all necessary plugins, prepare your keyboard shortcuts, create your Bash aliases etc...
+## Projet étudiant — Adaptation STUDI
 
-- [Awesome dotfiles](https://github.com/webpro/awesome-dotfiles)
-- [Lean and mean dev with PHPStorm](https://symfonycasts.com/screencast/phpstorm)
+Ce projet est une adaptation du projet de cours original dans le cadre de la formation STUDI.
 
-As soon as everything is ready, you can read some docs during the development.
-Take a look below !
+**Développé et enrichi par Melle G. (Welle11)**
 
-- [Tools helping developers every day](https://www.youtube.com/watch?v=_OEDoPMvNY4)
-- [Symfony Fast Track](https://symfony.com/doc/6.2/the-fast-track/fr/index.html)
+Inspiré également des projets étudiants :
+- **ThomasBDC** — [ProjetQuaiAntique](https://github.com/ThomasBDC/ProjetQuaiAntique),(https://github.com/ThomasBDC/QuaiAntiqueRestaurantFront)
 
-## Installation instructions
+---
 
-### Project requirements
+## Stack technique
 
-- [PHP >=7.2.5 or higher](http://php.net/manual/fr/install.php)
-- [SQL >=8.0](https://www.mysql.com/fr/downloads/)
-- [Symfony CLI](https://symfony.com/download)
-- [Composer](https://getcomposer.org/download)
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- PHP extensions such as : Iconv, JSON, PCRE, Session, Tokenizer and the [usual Symfony application requirements][1].
+- PHP 8.2
+- Symfony LTS
+- Doctrine ORM
+- MySQL 8
+- NelmioApiDocBundle (Swagger)
+- NelmioCorsBundle
 
+---
+
+## Prérequis
+
+- PHP >= 8.2
+- MySQL >= 8.0
+- Symfony CLI
+- Composer
+- Git
+
+---
+
+## Installation
+
+1. Cloner le dépôt :
 ```bash
-$ symfony check:requirements # To check minimal requirements for the project
+git clone https://github.com/Welle11/QuaiAntiqueRestaurant_BACK.git
+cd studi-restaurant-symfony-lts-api
 ```
 
-### View
-
-![Symfony view](./studi-restaurant-view.png "Symfony configuration view")
-
-### Installation
-
-1 . **Register a GPG/SSH Key into your Gitlab/Github account** to push verified commits and registry images.
-
-2 . Clone the current repository (SSH):
+2. Installer les dépendances :
 ```bash
-$ git clone 'git@github.com:GaetanRole/studi-restaurant-symfony-lts-api.git'
+composer install
 ```
 
-3 . Move in and create few `.env.{environment}.local` files, according to your environments with your default configuration.
-**.local files are not committed to the shared repository.**
-
+3. Créer le fichier `.env.local` et configurer la base de données :
 ```bash
-$ cp .env .env.local   # Create .env.$APP_ENV.local files. Complete them with your configuration.
+cp .env .env.local
 ```
 
-> `.env` equals to the last `.env.dist` file before [november 2018][2].
+Renseigner la variable `DATABASE_URL` dans `.env.local` :
 
-4 . Set your DATABASE_URL in `.env.{environment}.local` files and run these commands :
-
+4. Créer la base de données et lancer les migrations :
 ```bash
-$ composer install        # Install all PHP packages
-$ php bin/console d:d:c   # Create your DATABASE related to your .env.local configuration
-$ php bin/console d:m:m   # Run migrations to setup your DATABASE according to your entities
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:update --force
 ```
 
-## Workflow
-
-Each course is related to one branch. 
-If you want to know what modification was made, you have to compare the previous branch with the new one.
-
-The ``[main]`` branch is always up to date with all courses.
-
-## Usage
-
+5. Lancer le serveur :
 ```bash
-$ symfony server:start    # Use this command to start a local server.
+symfony serve
 ```
 
-To see all available routes, services... :
+---
 
-```bash
-$ bin/console debug:router
-$ bin/console debug:container
-$ bin/console debug:...
-```
+## Routes API
 
-## Continuous deployment
+| Méthode | Route | Accès | Description |
+|---------|-------|-------|-------------|
+| POST | /api/registration | Public | Inscription |
+| POST | /api/login | Public | Connexion |
+| GET | /api/account/me | ROLE_USER | Infos utilisateur |
+| PUT | /api/account/edit | ROLE_USER | Modifier son compte |
+| GET | /api/picture | Public | Liste des photos |
+| POST | /api/picture | ROLE_USER | Ajouter une photo |
+| DELETE | /api/picture/{id} | ROLE_USER | Supprimer une photo |
+| GET | /api/menu | Public | Liste des menus |
+| POST | /api/menu | ROLE_USER | Ajouter un menu |
+| DELETE | /api/menu/{id} | ROLE_USER | Supprimer un menu |
+| GET | /api/reservation | ROLE_USER | Mes réservations |
+| POST | /api/reservation | ROLE_USER | Créer une réservation |
+| DELETE | /api/reservation/{id} | ROLE_USER | Supprimer une réservation |
 
-This project can be easily hosted on Platform.SH :
+---
 
-<p align="center">
-<a href="https://auth.api.platform.sh/"><img src="https://platform.sh/images/deploy/lg-blue.svg" alt="Deploy on Platform.sh" width="180px" /></a>
-</p>
+## Documentation Swagger
 
-```bash
-$ symfony project:set-remote [PROJECT_ID]
-$ symfony cloud:environment:push
-```
-
-## Contributing
-
-Zero contribution is allowed. This software is private for STUDI and STUDI students.
-
-[1]: https://symfony.com/doc/current/reference/requirements.html
-[2]: https://symfony.com/doc/current/configuration.html#the-env-file-environment-variables
-
-[⬆️ Back to top](#studi-restaurant-symfony-lts-api)
+Disponible sur : `http://127.0.0.1:8000/api/doc`

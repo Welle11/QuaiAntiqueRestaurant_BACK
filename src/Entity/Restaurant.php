@@ -40,9 +40,13 @@ class Restaurant
     #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Picture::class, orphanRemoval: true)]
     private Collection $pictures;
 
+    #[ORM\OneToMany(mappedBy: 'restaurant', targetEntity: Menu::class)]
+    private Collection $menus;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->menus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,7 +62,6 @@ class Restaurant
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -70,7 +73,6 @@ class Restaurant
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -82,7 +84,6 @@ class Restaurant
     public function setAmOpeningTime(array $amOpeningTime): static
     {
         $this->amOpeningTime = $amOpeningTime;
-
         return $this;
     }
 
@@ -94,7 +95,6 @@ class Restaurant
     public function setPmOpeningTime(array $pmOpeningTime): static
     {
         $this->pmOpeningTime = $pmOpeningTime;
-
         return $this;
     }
 
@@ -106,7 +106,6 @@ class Restaurant
     public function setMaxGuest(int $maxGuest): static
     {
         $this->maxGuest = $maxGuest;
-
         return $this;
     }
 
@@ -118,7 +117,6 @@ class Restaurant
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -130,7 +128,6 @@ class Restaurant
     public function setUpdatedAt(?DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -146,7 +143,6 @@ class Restaurant
             $this->pictures->add($picture);
             $picture->setRestaurant($this);
         }
-
         return $this;
     }
 
@@ -155,7 +151,29 @@ class Restaurant
         if ($this->pictures->removeElement($picture) && $picture->getRestaurant() === $this) {
             $picture->setRestaurant(null);
         }
+        return $this;
+    }
 
+    /** @return Collection<int, Menu> */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): static
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus->add($menu);
+            $menu->setRestaurant($this);
+        }
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): static
+    {
+        if ($this->menus->removeElement($menu) && $menu->getRestaurant() === $this) {
+            $menu->setRestaurant(null);
+        }
         return $this;
     }
 }
